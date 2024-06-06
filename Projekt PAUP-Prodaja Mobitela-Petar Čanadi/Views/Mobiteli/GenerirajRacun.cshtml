@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Račun za kupnju mobitela</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .details {
+            margin-top: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+        }
+
+        .thank-you {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Račun</h1>
+        <div class="details">
+            <div class="detail-row">
+                <span class="detail-label">Datum kupnje:</span>
+                <span>@DateTime.Now.ToString("dd.MM.yyyy.")</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Naziv:</span>
+                <span>Galaxy S21</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Proizvođač:</span>
+                <span>Samsung</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Cijena:</span>
+                <span>1000.00 kn</span>
+            </div>
+            <!-- Dodajte ostale detalje o računu prema potrebi -->
+        </div>
+        <div class="thank-you">
+            <p>Hvala Vam na kupnji! Posjetite nas ponovo!</p>
+        </div>
+        <div class="back-button">
+            <a href="javascript:history.back()" class="btn">Natrag na detalje mobitela</a>
+        </div>
+    </div>
+</body>
+</html>

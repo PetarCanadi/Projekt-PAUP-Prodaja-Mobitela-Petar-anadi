@@ -1,0 +1,18 @@
+﻿@using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
+@model Mobitel
+
+@{
+    ViewBag.Title = "Brisanje";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-4">
+    <h2>@ViewBag.Title</h2>
+    <p>Jeste li sigurni da želite izbrisati mobitel <strong>@Model.ProizvodjacNaziv</strong>?</p>
+
+    @using (Html.BeginForm("Brisi", "Mobiteli", FormMethod.Post, new { @class = "form-inline" }))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Izbriši</button>
+        @Html.ActionLink("Odustani", "Popis", null, new { @class = "btn btn-secondary ml-2" })
+    }
+</div>

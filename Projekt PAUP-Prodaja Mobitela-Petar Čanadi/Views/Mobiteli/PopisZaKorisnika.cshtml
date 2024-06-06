@@ -1,0 +1,99 @@
+﻿@using System.Web.Mvc.Html
+@model List<Mobitel>
+@using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
+
+@{
+    ViewBag.Title = "Popis mobitela";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Popis mobitela</h2>
+            <div class="text-right">
+                <!-- Forma za odjavu -->
+                @using (Html.BeginForm("Odjava", "Korisnici", FormMethod.Post, new { @class = "form-inline" }))
+                {
+                    <button type="submit" class="btn btn-danger">Odjavi se</button>
+                }
+                <div class="text-right">
+                    <!-- Link za prijavu reklamacije -->
+                    <a href="@Url.Action("PrijaviReklamaciju", "Mobiteli")" class="btn btn-primary">Prijavi reklamaciju</a>
+                </div>
+            </div>
+    </div>
+
+    <!-- Search form -->
+    @using (Html.BeginForm("Popis", "Mobiteli", FormMethod.Get, new { @class = "form-inline" }))
+    {
+        <div class="form-group mb-2">
+            <label for="naziv" class="sr-only">Naziv</label>
+            @Html.TextBox("naziv", Request.QueryString["naziv"], new { @class = "form-control", @placeholder = "Naziv" })
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="proizvodjac" class="sr-only">Proizvodjac</label>
+            @Html.TextBox("proizvodjac", Request.QueryString["proizvodjac"], new { @class = "form-control", @placeholder = "Proizvodjac" })
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Traži</button>
+    }
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-info">@ViewBag.Message</div>
+    }
+    else
+    {
+        <!-- Table for displaying mobile phones -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Naziv</th>
+                    <th>Proizvodjac</th>
+                    <th>Cijena</th>
+                    <th>Opis</th>
+                    <th>Detalji</th>
+                    <th></th> <!-- Nova kolona za gumb "Kupi" -->
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var mobitel in Model)
+                {
+                    <tr>
+                        <td>@mobitel.ID</td>
+                        <td>@mobitel.Naziv</td>
+                        <td>@mobitel.Proizvodjac</td>
+                        <td>@mobitel.Cijena</td>
+                        <td>@mobitel.Opis</td>
+                        <!-- Link for "Detalji" -->
+                        <td>@Html.ActionLink("Detalji", "Detalji", new { id = mobitel.ID }, new { @class = "btn btn-info" })</td>
+                        <!-- Link for "Kupi" -->
+                        <td>
+                            <a href="@Url.Action("PotvrdaKupovine", "Mobiteli", new { id = mobitel.ID })" class="btn btn-success" data-toggle="modal" data-target="#potvrdaKupovineModal">Kupi</a>
+                        </td>
+                       
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<!-- Modal for purchase confirmation -->
+<div class="modal fade" id="potvrdaKupovineModal" tabindex="-1" role="dialog" aria-labelledby="potvrdaKupovineModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="potvrdaKupovineModalLabel">Potvrda Kupovine</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Sadržaj modal-a -->
+            </div>
+        </div>
+    </div>
+</div>

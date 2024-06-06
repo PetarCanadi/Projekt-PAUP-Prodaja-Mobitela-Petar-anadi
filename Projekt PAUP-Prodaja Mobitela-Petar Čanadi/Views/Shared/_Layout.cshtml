@@ -1,0 +1,44 @@
+﻿@using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi <!-- Dodajemo namespace kako bi koristili njegove komponente -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Prodaja mobitela</title>
+    @Styles.Render("~/Content/css") <!-- Učitavamo CSS stilove -->
+    @Scripts.Render("~/bundles/modernizr") <!-- Učitavamo Modernizr za detekciju HTML5 i CSS3 mogućnosti u pregledniku -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+        <div class="container">
+           
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li>@Html.ActionLink("Početna", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li> <!-- Linkovi za početnu stranicu, mobitele i korisnike -->
+                    <li>@Html.ActionLink("O nama", "Onama", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                </ul>
+
+               
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody() <!-- Renderira sadržaj tijela stranice -->
+        <hr />
+        <footer>
+            <p>&copy;Mev @DateTime.Now.Year - My ASP.NET Application</p> <!-- Copyright informacija -->
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery") <!-- Učitavamo jQuery biblioteku -->
+    @Scripts.Render("~/bundles/bootstrap") <!-- Učitavamo Bootstrap skripte -->
+    @RenderSection("scripts", required: false) <!-- Renderira sekciju skripti ako postoji -->
+</body>
+</html>

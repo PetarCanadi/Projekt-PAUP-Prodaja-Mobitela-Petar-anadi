@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Prijava administratora";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Prijava", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        @Html.Label("Korisničko ime:")
+        @Html.TextBox("korisnickoIme")
+    </div>
+    <div>
+        @Html.Label("Lozinka:")
+        @Html.Password("lozinka")
+    </div>
+    <div>
+        <input type="submit" value="Prijavi se" />
+    </div>
+}

@@ -1,0 +1,36 @@
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Reklamacija
+
+@{
+    ViewBag.Title = "Prijavi Reklamaciju";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Prijavi Reklamaciju</h2>
+
+@using (Html.BeginForm("PrijaviReklamaciju", "Mobiteli", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.MobitelId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Proizvodjac)
+        @Html.TextBoxFor(model => model.Proizvodjac, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Naziv)
+        @Html.TextBoxFor(model => model.Naziv, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Cijena)
+        @Html.TextBoxFor(model => model.Cijena, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.DatumKupnje)
+        @Html.TextBoxFor(model => model.DatumKupnje, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.OpisKvara)
+        @Html.TextAreaFor(model => model.OpisKvara, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Prijavi Reklamaciju</button>
+}

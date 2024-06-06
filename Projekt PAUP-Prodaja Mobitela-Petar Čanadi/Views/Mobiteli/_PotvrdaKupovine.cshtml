@@ -1,0 +1,8 @@
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel
+
+<p>Jeste li sigurni da želite kupiti mobitel "@Model.Naziv"?</p>
+@using (Html.BeginForm("Kupi", "Mobiteli", new { id = Model.ID }, FormMethod.Post))
+{
+    <button type="submit" class="btn btn-primary">Da</button>
+    <a href="#" class="btn btn-secondary" data-dismiss="modal">Ne</a>
+}
