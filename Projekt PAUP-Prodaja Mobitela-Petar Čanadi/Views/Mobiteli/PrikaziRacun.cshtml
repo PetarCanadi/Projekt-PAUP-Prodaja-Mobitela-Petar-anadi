@@ -1,0 +1,50 @@
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Racun
+
+@{
+    ViewBag.Title = "Prikaz računa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var euroCulture = new System.Globalization.CultureInfo("hr-HR");
+}
+
+<div class="container">
+    <h2>Detalji računa</h2>
+    <dl class="row">
+        <dt class="col-sm-3">Datum kupnje:</dt>
+        <dd class="col-sm-9">@Model.DatumKupnje.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Korisničko ime:</dt>
+        <dd class="col-sm-9">@ViewBag.KorisnickoIme</dd>
+    </dl>
+
+    <h3>Stavke računa</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Naziv mobitela</th>
+                <th>Količina</th>
+                <th>Cijena po komadu</th>
+                <th>Ukupna cijena</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stavka in Model.RacunStavke)
+            {
+                <tr>
+                    <td>@stavka.Mobitel.Naziv</td>
+                    <td>@stavka.Kolicina</td>
+                    <td>@stavka.Cijena.ToString("C", euroCulture)</td>
+                    <td>@stavka.UkupnaCijena.ToString("C", euroCulture)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <dl class="row mt-4">
+        <dt class="col-sm-3">Ukupan iznos:</dt>
+        <dd class="col-sm-9">@Model.UkupanIznos.ToString("C", euroCulture)</dd>
+    </dl>
+
+    <div class="alert alert-success mt-4" role="alert">
+        Hvala vam na kupnji! Nadamo se da ćete uživati u vašem novom mobitelu.
+    </div>
+</div>

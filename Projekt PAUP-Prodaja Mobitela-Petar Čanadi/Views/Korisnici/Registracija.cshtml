@@ -5,7 +5,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-group">
-        @Html.LabelFor(m => m.KorisnickoIme)
+        @Html.LabelFor(m => m.KorisnickoIme, "Korisničko Ime")
         @Html.TextBoxFor(m => m.KorisnickoIme, new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.KorisnickoIme)
     </div>
@@ -23,9 +23,15 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.PrezimeIme)
+        @Html.LabelFor(m => m.PrezimeIme, "Prezime Ime")
         @Html.TextBoxFor(m => m.PrezimeIme, new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.PrezimeIme)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.OIB)
+        @Html.TextBoxFor(m => m.OIB, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.OIB)
     </div>
 
     <button type="submit" class="btn btn-primary">Registracija</button>

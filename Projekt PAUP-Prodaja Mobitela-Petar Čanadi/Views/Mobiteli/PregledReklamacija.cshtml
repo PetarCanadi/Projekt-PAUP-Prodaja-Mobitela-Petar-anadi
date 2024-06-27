@@ -1,0 +1,46 @@
+﻿@model List<Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Reklamacija>
+
+@{
+    ViewBag.Title = "Pregled Reklamacija";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+<a href="@Url.Action("PopisZaAdmina", "Mobiteli")" class="btn btn-secondary">Povratak</a>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">@ViewBag.Message</div>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Proizvođač</th>
+            <th>Naziv</th>
+            <th>Cijena</th>
+            <th>Datum Kupnje</th>
+            <th>Opis Kvara</th>
+            <th></th> 
+        </tr>
+        @foreach (var reklamacija in Model)
+        {
+            <tr>
+                <td>@reklamacija.Id</td>
+                <td>@reklamacija.Proizvodjac</td>
+                <td>@reklamacija.Naziv</td>
+                <td>@reklamacija.Cijena</td>
+                <td>@reklamacija.DatumKupnje.ToShortDateString()</td>
+                <td>@reklamacija.OpisKvara</td>
+                <td>
+                    @using (Html.BeginForm("PotvrdaBrisanja", "Mobiteli", new { id = reklamacija.Id }, FormMethod.Get))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-sm">Izbriši</button>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}

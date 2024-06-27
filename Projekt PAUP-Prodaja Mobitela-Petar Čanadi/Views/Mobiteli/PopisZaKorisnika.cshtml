@@ -1,6 +1,4 @@
-﻿@using System.Web.Mvc.Html
-@model List<Mobitel>
-@using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
+﻿@model PagedList.IPagedList<Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel>
 
 @{
     ViewBag.Title = "Popis mobitela";
@@ -10,30 +8,35 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <h5>Prijavljeni korisnik: @ViewBag.KorisnickoIme</h5> <!-- Display the username here -->
+        </div>
+        <div class="col-md-12">
             <h2>Popis mobitela</h2>
-            <div class="text-right">
-                <!-- Forma za odjavu -->
-                @using (Html.BeginForm("Odjava", "Korisnici", FormMethod.Post, new { @class = "form-inline" }))
-                {
-                    <button type="submit" class="btn btn-danger">Odjavi se</button>
-                }
-                <div class="text-right">
-                    <!-- Link za prijavu reklamacije -->
-                    <a href="@Url.Action("PrijaviReklamaciju", "Mobiteli")" class="btn btn-primary">Prijavi reklamaciju</a>
-                </div>
-            </div>
+        </div>
     </div>
 
-    <!-- Search form -->
-    @using (Html.BeginForm("Popis", "Mobiteli", FormMethod.Get, new { @class = "form-inline" }))
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <a href="@Url.Action("PrijaviReklamaciju", "Mobiteli")" class="btn btn-primary">Prijavi Reklamaciju</a>
+            <a href="@Url.Action("Kosarica", "Mobiteli")" class="btn btn-success ml-2">Košarica</a>
+            @Html.ActionLink("Moje Kupnje", "MojeKupnje", "Mobiteli", null, new { @class = "btn btn-info ml-2" })
+        </div>
+    </div>
+
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-inline" }))
+    {
+        <button type="submit" class="btn btn-danger">Odjavi se</button>
+    }
+
+    @using (Html.BeginForm("PopisZaKorisnika", "Mobiteli", FormMethod.Get, new { @class = "form-inline" }))
     {
         <div class="form-group mb-2">
             <label for="naziv" class="sr-only">Naziv</label>
-            @Html.TextBox("naziv", Request.QueryString["naziv"], new { @class = "form-control", @placeholder = "Naziv" })
+            @Html.TextBox("naziv", Request.QueryString["naziv"], new { @class = "form-control", @placeholder = "Naziv", @id = "naziv" })
         </div>
         <div class="form-group mx-sm-3 mb-2">
-            <label for="proizvodjac" class="sr-only">Proizvodjac</label>
-            @Html.TextBox("proizvodjac", Request.QueryString["proizvodjac"], new { @class = "form-control", @placeholder = "Proizvodjac" })
+            <label for="proizvodjac" class="sr-only">Proizvođač</label>
+            @Html.TextBox("proizvodjac", Request.QueryString["proizvodjac"], new { @class = "form-control", @placeholder = "Proizvođač", @id = "proizvodjac" })
         </div>
         <button type="submit" class="btn btn-primary mb-2">Traži</button>
     }
@@ -44,18 +47,18 @@
     }
     else
     {
-        <!-- Table for displaying mobile phones -->
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Naziv</th>
-                    <th>Proizvodjac</th>
+                    <th>Proizvođač</th>
                     <th>Cijena</th>
+                    <th>VPC</th>
                     <th>Opis</th>
                     <th>Detalji</th>
-                    <th></th> <!-- Nova kolona za gumb "Kupi" -->
-                    
+                    <th>Količina</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -66,34 +69,42 @@
                         <td>@mobitel.Naziv</td>
                         <td>@mobitel.Proizvodjac</td>
                         <td>@mobitel.Cijena</td>
+                        <td>@mobitel.VPC</td>
                         <td>@mobitel.Opis</td>
-                        <!-- Link for "Detalji" -->
-                        <td>@Html.ActionLink("Detalji", "Detalji", new { id = mobitel.ID }, new { @class = "btn btn-info" })</td>
-                        <!-- Link for "Kupi" -->
+                        <td>@Html.ActionLink("Detalji", "DetaljiZaKorisnika", new { id = mobitel.ID }, new { @class = "btn btn-info" })</td>
                         <td>
-                            <a href="@Url.Action("PotvrdaKupovine", "Mobiteli", new { id = mobitel.ID })" class="btn btn-success" data-toggle="modal" data-target="#potvrdaKupovineModal">Kupi</a>
+                            <form action="@Url.Action("DodajUKosaricu", "Mobiteli")" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="mobitelID" value="@mobitel.ID" />
+                                <input type="number" class="form-control kolicina-input" name="kolicina" min="1" value="1" />
+                                <button type="submit" class="btn btn-success">Dodaj u košaricu</button>
+                            </form>
                         </td>
-                       
                     </tr>
                 }
             </tbody>
         </table>
     }
-</div>
 
-<!-- Modal for purchase confirmation -->
-<div class="modal fade" id="potvrdaKupovineModal" tabindex="-1" role="dialog" aria-labelledby="potvrdaKupovineModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="potvrdaKupovineModalLabel">Potvrda Kupovine</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Sadržaj modal-a -->
-            </div>
+    <!-- Pagination -->
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("PopisZaKorisnika", new { page = 1, naziv = Request.QueryString["naziv"], proizvodjac = Request.QueryString["proizvodjac"] })">Prva</a>
+                    </li>
+                    @for (int i = 1; i <= Model.PageCount; i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("PopisZaKorisnika", new { page = i, naziv = Request.QueryString["naziv"], proizvodjac = Request.QueryString["proizvodjac"] })">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("PopisZaKorisnika", new { page = Model.PageCount, naziv = Request.QueryString["naziv"], proizvodjac = Request.QueryString["proizvodjac"] })">Zadnja</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

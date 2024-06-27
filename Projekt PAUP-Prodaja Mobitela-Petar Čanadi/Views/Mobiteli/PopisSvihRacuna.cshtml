@@ -1,0 +1,44 @@
+﻿@model List<Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Racun>
+
+@{
+    ViewBag.Title = "Popis svih računa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Popis svih računa</h2>
+
+    @if (Model.Count == 0)
+    {
+        <p>Trenutno nema računa za prikaz.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Rbr.</th>
+                    <th>Datum kupnje</th>
+                    <th>Korisničko ime</th>
+                    <th>Ukupan iznos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var racun in Model)
+                {
+                    <tr>
+                        <td>@racun.RacunID</td>
+                        <td>@racun.DatumKupnje.ToString("dd.MM.yyyy. HH:mm")</td>
+                        <td>@racun.KorisnickoIme</td>
+                        <td>@racun.UkupanIznos.ToString("C")</td>
+                        <td>
+                            @Html.ActionLink("Detalji", "DetaljiRacuna", new { id = racun.RacunID }, new { @class = "btn btn-info" })
+                            @Html.ActionLink("Izbriši", "IzbrisiRacun", new { id = racun.RacunID }, new { @class = "btn btn-danger", onclick = "return confirm('Jeste li sigurni da želite izbrisati ovaj račun?');" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

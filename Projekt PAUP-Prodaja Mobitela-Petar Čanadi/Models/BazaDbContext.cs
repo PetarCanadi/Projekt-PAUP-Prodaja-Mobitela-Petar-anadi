@@ -10,7 +10,9 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
         public DbSet<Mobitel> Mobiteli { get; set; }
         public DbSet<PrijavaKorisnika> PrijavaKorisnika { get; set; }
         public DbSet<RegistracijaKorisnika> RegistracijaKorisnika { get; set; }
-        public DbSet<Reklamacija> Reklamacije { get; set; }
+        public DbSet<Reklamacija> Reklamacija { get; set; }
+        public DbSet<Racun> Racuni { get; set; }
+        public DbSet<RacunStavka> RacunStavke { get; set; }
 
         public BazaDbContext() : base("name=BazaDbContext")
         {
@@ -21,12 +23,30 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Mobitel>().ToTable("mobiteli");
-            modelBuilder.Entity<Mobitel>().Property(m => m.ID).HasColumnName("ID");
-            modelBuilder.Entity<Mobitel>().Property(m => m.Naziv).HasColumnName("Naziv");
-            modelBuilder.Entity<Mobitel>().Property(m => m.Proizvodjac).HasColumnName("Proizvodjac");
-            modelBuilder.Entity<Mobitel>().Property(m => m.Cijena).HasColumnName("Cijena");
-            modelBuilder.Entity<Mobitel>().Property(m => m.Opis).HasColumnName("Opis");
-            modelBuilder.Entity<Mobitel>().Property(m => m.GodinaModela).HasColumnName("GodinaModela");
+            modelBuilder.Entity<RegistracijaKorisnika>().ToTable("registracijakorisnika");
+            modelBuilder.Entity<PrijavaKorisnika>().ToTable("prijavakorisnika");
+            modelBuilder.Entity<Racun>().ToTable("racuni");
+            modelBuilder.Entity<Reklamacija>().ToTable("reklamacije");
+
+            // Configure primary key for RacunStavka
+            modelBuilder.Entity<RacunStavka>()
+                   .HasKey(rs => rs.RacunStavkaID);
+
+            // Configure primary key for Racun
+            modelBuilder.Entity<Racun>()
+                        .HasKey(r => r.RacunID);
+
+            // Configure one-to-many relationship between Racun and RacunStavka
+            modelBuilder.Entity<Racun>()
+                        .HasMany(r => r.RacunStavke)
+                        .WithRequired(rs => rs.Racun)
+                        .HasForeignKey(rs => rs.RacunID);
+
+            // Configure one-to-many relationship between Mobitel and RacunStavka
+            modelBuilder.Entity<RacunStavka>()
+                        .HasRequired(rs => rs.Mobitel)
+                        .WithMany()
+                        .HasForeignKey(rs => rs.MobitelID);
         }
     }
 }

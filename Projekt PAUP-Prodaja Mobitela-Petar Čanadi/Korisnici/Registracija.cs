@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
 {
@@ -8,10 +7,12 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Unesite korisničko ime")]
+        [StringLength(50)]
         public string KorisnickoIme { get; set; }
 
         [Required(ErrorMessage = "Unesite lozinku")]
         [DataType(DataType.Password)]
+        [StringLength(50)]
         public string Lozinka { get; set; }
 
         [Required(ErrorMessage = "Unesite email adresu")]
@@ -19,6 +20,10 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Unesite svoje puno ime")]
+        [StringLength(100)]
         public string PrezimeIme { get; set; }
+
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "OIB mora imati točno 11 znamenki")]
+        public string OIB { get; set; }
     }
 }

@@ -192,12 +192,15 @@
     </Compile>
     <Compile Include="Korisnici\AdminPrijava.cs" />
     <Compile Include="Korisnici\Prijava.cs" />
+    <Compile Include="Korisnici\PromjenaLozinke.cs" />
     <Compile Include="Korisnici\Registracija.cs" />
     <Compile Include="Models\BazaDbContext.cs" />
-    <Compile Include="Models\GodinaModela.cs" />
+    <Compile Include="Models\KosaricaItem.cs" />
     <Compile Include="Models\Mobitel.cs" />
     <Compile Include="Models\MobiteliDB.cs" />
+    <Compile Include="Models\Racun.cs" />
     <Compile Include="Models\Reklamacija.cs" />
+    <Compile Include="Models\RacunStavka.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +257,8 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Onama.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Mobiteli\Index.cshtml" />
-    <Content Include="Views\Mobiteli\Popis.cshtml" />
-    <Content Include="Views\Mobiteli\Detalji.cshtml" />
+    <Content Include="Views\Mobiteli\PopisZaAdmina.cshtml" />
+    <Content Include="Views\Mobiteli\DetaljiZaKorisnika.cshtml" />
     <Content Include="Views\Mobiteli\Azuriraj.cshtml" />
     <Content Include="Views\Mobiteli\Brisi.cshtml" />
     <Content Include="Views\Mobiteli\BrisiStatus.cshtml" />
@@ -265,17 +267,29 @@
     <Content Include="Views\Korisnici\Registracija.cshtml" />
     <Content Include="Views\Korisnici\Odjava.cshtml" />
     <Content Include="Views\Mobiteli\PopisZaKorisnika.cshtml" />
-    <Content Include="Views\Mobiteli\_PotvrdaKupovine.cshtml" />
-    <Content Include="Views\Mobiteli\Kupnja.cshtml" />
-    <Content Include="Views\Mobiteli\detaljikupnje.cshtml" />
-    <Content Include="Views\Mobiteli\GenerirajRacun.cshtml" />
+    <Content Include="Views\Mobiteli\DodajNoviMobitel.cshtml" />
+    <Content Include="Views\Mobiteli\DetaljiZaAdmina.cshtml" />
+    <Content Include="Views\Mobiteli\PregledReklamacija.cshtml" />
+    <Content Include="Views\Mobiteli\BrisiRekalmaciju.cshtml" />
+    <Content Include="Views\Mobiteli\PotvrdaBrisanja.cshtml" />
+    <Content Include="Views\Korisnici\PopisKupaca.cshtml" />
+    <Content Include="Views\Korisnici\PotvrdaBrisanja.cshtml" />
+    <Content Include="Views\Mobiteli\UspjesnaPrijavaReklamacije.cshtml" />
     <Content Include="Views\Mobiteli\PrijaviReklamaciju.cshtml" />
+    <Content Include="Views\Korisnici\PromjenaLozinke.cshtml" />
+    <Content Include="Views\Mobiteli\Kosarica.cshtml" />
+    <Content Include="Views\Mobiteli\PopisRacuna.cshtml" />
+    <Content Include="Views\Mobiteli\PrikaziRacun.cshtml" />
+    <Content Include="Views\Mobiteli\PopisSvihRacuna.cshtml" />
+    <Content Include="Views\Mobiteli\DetaljiRacuna.cshtml" />
+    <Content Include="Views\Mobiteli\MojeKupnje.cshtml" />
+    <Content Include="Views\Mobiteli\DetaljiRacunaZaKupca.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\GeneratedPDFs\" />
-    <Folder Include="Views\PotvrdaKupovine\" />
-    <Folder Include="Views\Reklamacija\" />
+    <Folder Include="Views\GenerirajRacun\" />
+    <Folder Include="Views\Shared\Pictures\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

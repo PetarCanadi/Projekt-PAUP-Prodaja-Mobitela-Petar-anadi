@@ -1,0 +1,41 @@
+﻿@model List<Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Racun>
+
+@{
+    ViewBag.Title = "Moje Kupnje";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Moje Kupnje</h2>
+
+    @if (Model.Count == 0)
+    {
+        <p>Trenutno nemate računa za prikaz.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Rbr.</th>
+                    <th>Datum kupnje</th>
+                    <th>Ukupan iznos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var racun in Model)
+                {
+                    <tr>
+                        <td>@racun.RacunID</td>
+                        <td>@racun.DatumKupnje.ToString("dd.MM.yyyy. HH:mm")</td>
+                        <td>@racun.UkupanIznos.ToString("C")</td>
+                        <td>
+                            @Html.ActionLink("Detalji", "DetaljiRacunaZaKupca", new { id = racun.RacunID }, new { @class = "btn btn-info" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

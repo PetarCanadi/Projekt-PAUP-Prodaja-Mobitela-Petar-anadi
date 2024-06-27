@@ -1,0 +1,48 @@
+﻿
+@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Racun
+
+@{
+    ViewBag.Title = "Detalji računa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2>Detalji računa</h2>
+
+    <dl class="row">
+        <dt class="col-sm-3">Datum kupnje:</dt>
+        <dd class="col-sm-9">@Model.DatumKupnje.ToString("dd.MM.yyyy. HH:mm")</dd>
+
+        <dt class="col-sm-3">Korisničko ime:</dt>
+        <dd class="col-sm-9">@Model.KorisnickoIme</dd>
+
+        <dt class="col-sm-3">Ukupan iznos:</dt>
+        <dd class="col-sm-9">@Model.UkupanIznos.ToString("C")</dd>
+    </dl>
+
+    <h3>Stavke računa</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Naziv mobitela</th>
+                <th>Količina</th>
+                <th>Cijena po komadu</th>
+                <th>Ukupna cijena</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stavka in Model.RacunStavke)
+            {
+                <tr>
+                    <td>@stavka.Mobitel.Naziv</td>
+                    <td>@stavka.Kolicina</td>
+                    <td>@stavka.Cijena.ToString("C")</td>
+                    <td>@stavka.UkupnaCijena.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @Html.ActionLink("Izbriši račun", "IzbrisiRacun", new { id = Model.RacunID }, new { @class = "btn btn-danger", onclick = "return confirm('Jeste li sigurni da želite izbrisati ovaj račun?');" })
+    @Html.ActionLink("Natrag na popis", "PopisSvihRacuna", null, new { @class = "btn btn-secondary" })
+</div>

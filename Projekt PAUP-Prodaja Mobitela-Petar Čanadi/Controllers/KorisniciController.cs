@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Security;
 using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models;
+using System.Web.Security;
+using System.Collections.Generic;
+using System;
+using System.Data.Entity.Validation;
 
 namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
 {
@@ -19,18 +22,20 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Prijava(PrijavaKorisnika prijava)
         {
             if (ModelState.IsValid)
             {
-                var korisnik = _context.PrijavaKorisnika
-     .FirstOrDefault(k => k.KorisnickoIme == prijava.KorisnickoIme && k.Lozinka == prijava.Lozinka);
-
+                var korisnik = _context.RegistracijaKorisnika
+                    .FirstOrDefault(k => k.KorisnickoIme == prijava.KorisnickoIme && k.Lozinka == prijava.Lozinka);
 
                 if (korisnik != null)
                 {
                     FormsAuthentication.SetAuthCookie(korisnik.KorisnickoIme, false);
+                    // Spremi korisničko ime u sesiju
+                    Session["KorisnickoIme"] = korisnik.KorisnickoIme;
                     return RedirectToAction("PopisZaKorisnika", "Mobiteli");
                 }
                 else
@@ -42,38 +47,132 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
         }
 
 
-
         [HttpGet]
         public ActionResult Registracija()
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Registracija(RegistracijaKorisnika model)
         {
             if (ModelState.IsValid)
             {
-                var korisnik = new PrijavaKorisnika
+                var korisnik = new RegistracijaKorisnika
                 {
                     KorisnickoIme = model.KorisnickoIme,
-                    Lozinka = model.Lozinka
+                    Lozinka = model.Lozinka,
+                    Email = model.Email,
+                    PrezimeIme = model.PrezimeIme,
+                    OIB = model.OIB
                 };
 
-                _context.PrijavaKorisnika.Add(korisnik);
-                _context.SaveChanges();
+                try
+                {
+                    _context.RegistracijaKorisnika.Add(korisnik);
+                    _context.SaveChanges();
 
-                return RedirectToAction("Prijava");
+                    return RedirectToAction("Prijava");
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var validationErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in validationErrors.ValidationErrors)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                            ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                        }
+                    }
+                }
             }
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Odjava()
+
+        [HttpGet]
+        public ActionResult PromjenaLozinke()
         {
-            FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PromijeniLozinku(PromjenaLozinkeModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var korisnik = _context.RegistracijaKorisnika
+                    .FirstOrDefault(k => k.KorisnickoIme == model.KorisnickoIme && k.Lozinka == model.StaraLozinka);
+
+                if (korisnik != null)
+                {
+                    korisnik.Lozinka = model.NovaLozinka;
+                    _context.SaveChanges();
+                    ViewBag.Message = "Lozinka je uspješno promijenjena.";
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Pogrešno korisničko ime ili stara lozinka.");
+                }
+            }
+
+            return View("PromjenaLozinke", model);
+        }
+
+        public ActionResult PopisKupaca()
+        {
+            try
+            {
+                var kupci = _context.RegistracijaKorisnika.ToList();
+
+                foreach (var korisnik in kupci)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Korisnik ID: {korisnik.Id}, Korisničko ime: {korisnik.KorisnickoIme}");
+                }
+
+                return View(kupci);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Došlo je do pogreške prilikom dohvaćanja podataka: " + ex.Message;
+                return View(new List<RegistracijaKorisnika>());
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BrisiKorisnika(int id)
+        {
+            try
+            {
+                var korisnik = _context.RegistracijaKorisnika.FirstOrDefault(k => k.Id == id);
+                if (korisnik == null)
+                {
+                    return HttpNotFound();
+                }
+
+                _context.RegistracijaKorisnika.Remove(korisnik);
+                _context.SaveChanges();
+
+                return RedirectToAction("PopisKupaca");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Došlo je do pogreške prilikom brisanja korisnika: " + ex.Message;
+                return View("PopisKupaca", _context.RegistracijaKorisnika.ToList());
+            }
+        }
+
+        public ActionResult PotvrdaBrisanja(int id)
+        {
+            var korisnik = _context.RegistracijaKorisnika.Find(id);
+            if (korisnik == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(korisnik);
         }
     }
 }

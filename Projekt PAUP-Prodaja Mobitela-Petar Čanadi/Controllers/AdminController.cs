@@ -25,7 +25,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                 authCookie.Value = korisnickoIme;
                 Response.Cookies.Add(authCookie);
 
-                return RedirectToAction("Popis", "Mobiteli");
+                return RedirectToAction("PopisZaAdmina", "Mobiteli");
             }
 
             ModelState.AddModelError("", "Neispravno korisničko ime ili lozinka");

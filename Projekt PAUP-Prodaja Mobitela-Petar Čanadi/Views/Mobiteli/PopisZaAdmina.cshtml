@@ -1,0 +1,148 @@
+﻿@using System.Web.Mvc.Html
+@model PagedList.IPagedList<Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel>
+
+@{
+    ViewBag.Title = "Popis mobitela za admina";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Popis mobitela za admina</h2>
+            <div class="text-right">
+                <!-- Gumb za popis registriranih kupaca -->
+                @Html.ActionLink("Popis kupaca", "PopisKupaca", "Korisnici", null, new { @class = "btn btn-primary" })
+
+                <!-- Gumb za pregled reklamacija -->
+                <a href="@Url.Action("PregledReklamacija", "Mobiteli")" class="btn btn-warning">Pregled reklamacija</a>
+                <!-- Gumb za dodavanje novog mobitela -->
+                <a href="@Url.Action("DodajNoviMobitel", "Mobiteli")" class="btn btn-success">Dodaj novi mobitel</a>
+
+                <!-- Forma za odjavu -->
+                @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-inline" }))
+                {
+                    <button type="submit" class="btn btn-danger">Odjavi se</button>
+                }
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("PopisZaAdmina", "Mobiteli", FormMethod.Get, new { @class = "form-inline" }))
+    {
+        <div class="form-group mb-2">
+            <label for="naziv" class="sr-only">Naziv</label>
+            @Html.TextBox("naziv", Request.QueryString["naziv"], new { @class = "form-control", @placeholder = "Naziv" })
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <label for="proizvodjac" class="sr-only">Proizvođač</label>
+            @Html.TextBox("proizvodjac", Request.QueryString["proizvodjac"], new { @class = "form-control", @placeholder = "Proizvođač" })
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Traži</button>
+    }
+
+    <!-- Poruka -->
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-info">@ViewBag.Message</div>
+    }
+    else
+    {
+        <!-- Gumb za pregled računa -->
+        <div class="mb-3">
+            <a href="@Url.Action("PopisSvihRacuna", "Mobiteli")" class="btn btn-info">Pregled računa</a>
+        </div>
+
+
+
+
+        <!-- Tablica sa mobitelima -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>RB</th>
+                        <th>ID</th>
+                        <th>Naziv</th>
+                        <th>Proizvođač</th>
+                        <th>Cijena</th>
+                        <th>VPC</th>
+                        <th>Opis</th>
+                        <th>Detalji</th>
+                        <th>Uredi</th>
+                        <th>Briši</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model[i].ID</td>
+                            <td>@Model[i].Naziv</td>
+                            <td>@Model[i].Proizvodjac</td>
+                            <td>@Model[i].Cijena</td>
+                            <td>@Model[i].VPC</td>
+                            <td>@Model[i].Opis</td>
+                            <!-- Link za "Detalji" -->
+                            <td>@Html.ActionLink("Detalji", "DetaljiZaAdmina", new { id = Model[i].ID }, new { @class = "btn btn-info" })</td>
+                            <!-- Dugme za uređivanje -->
+                            <td>
+                                <a href="@Url.Action("Azuriraj", "Mobiteli", new { id = Model[i].ID })" class="btn btn-primary">Uredi</a>
+                            </td>
+                            <!-- Dugme za brisanje -->
+                            <td>
+                                <a href="@Url.Action("Brisi", "Mobiteli", new { id = Model[i].ID })" class="btn btn-danger" data-toggle="modal" data-target="#brisanjeModal">Briši</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginacija -->
+        <div class="row">
+            <div class="col-md-12">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("PopisZaAdmina", new { page = 1, naziv = Request.QueryString["naziv"], proizvodjac = Request.QueryString["proizvodjac"] })">Prva</a>
+                        </li>
+                        @for (int i = 1; i <= Model.PageCount; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("PopisZaAdmina", new { page = i, naziv = Request.QueryString["naziv"], proizvodjac = Request.QueryString["proizvodjac"] })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PageNumber == Model.PageCount ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("PopisZaAdmina", new { page = Model.PageCount, naziv = Request.QueryString["naziv"], proizvodjac = Request.QueryString["proizvodjac"] })">Zadnja</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal za potvrdu kupovine -->
+<div class="modal fade" id="potvrdaKupovineModal" tabindex="-1" role="dialog" aria-labelledby="potvrdaKupovineModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="potvrdaKupovineModalLabel">Potvrda Kupovine</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Sadržaj modala -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // JavaScript kodovi ovdje...
+    </script>
+}

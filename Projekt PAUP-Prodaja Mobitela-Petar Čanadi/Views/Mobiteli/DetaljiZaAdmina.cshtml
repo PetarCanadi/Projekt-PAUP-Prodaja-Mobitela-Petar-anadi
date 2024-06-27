@@ -1,4 +1,4 @@
-﻿@using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
+﻿using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
 @model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel
 
 @{
@@ -16,19 +16,21 @@
                 <dt class="col-sm-3">Naziv</dt>
                 <dd class="col-sm-9">@Model.Naziv</dd>
 
-                <dt class="col-sm-3">Proizvodjac</dt>
+                <dt class="col-sm-3">Proizvođač</dt>
                 <dd class="col-sm-9">@Model.Proizvodjac</dd>
 
                 <dt class="col-sm-3">Cijena</dt>
                 <dd class="col-sm-9">@Model.Cijena</dd>
+                 <dt class="col-sm-3">VPC</dt>
+                 <dd class="col-sm-9">@Model.VPC</dd>
 
                 <dt class="col-sm-3">Opis</dt>
                 <dd class="col-sm-9">@Model.Opis</dd>
             </dl>
         </div>
         <div class="card-footer">
-            @Html.ActionLink("Nazad", "Index", null, new { @class = "btn btn-secondary" })
-            @Html.ActionLink("Uredi", "Azuriraj", new { id = Model.ID }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Nazad", "PopisZaAdmina", null, new { @class = "btn btn-secondary" })
+
         </div>
     </div>
 </div>

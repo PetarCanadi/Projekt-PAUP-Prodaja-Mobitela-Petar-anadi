@@ -13,11 +13,11 @@
     }
     else
     {
-        <h2>Azuriraj podataka o mobitelima</h2>
+        <h2>Ažuriraj podataka o mobitelima</h2>
         <h3>@Model.Naziv @Model.Proizvodjac</h3>
     }
 
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+    @using (Html.BeginForm("Spremi", "Mobiteli", FormMethod.Post, new { @class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "Ispravite podatke", new { @class = "text-danger" })
@@ -27,7 +27,7 @@
             <div class="form-group row">
                 @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
                 <div class="col-sm-10">
-                    @Html.TextBoxFor(model => model.ID, new { @class = "form-control", @disabled = "disabled" })
+                    @Html.TextBoxFor(model => model.ID, new { @class = "form-control", @readonly = "readonly" })
                 </div>
             </div>
         }
@@ -38,13 +38,12 @@
                 @Html.ValidationMessageFor(model => model.Naziv, "", new { @class = "text-danger" })
             </div>
         </div>
-        <div class="form-group row">
-            @Html.LabelFor(model => model.Proizvodjac, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
-            <div class="col-sm-10">
-                @Html.TextBoxFor(model => model.Proizvodjac, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Proizvodjac, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Proizvodjac)
+            @Html.DropDownListFor(model => model.Proizvodjac, ViewBag.Proizvodjaci as SelectList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Proizvodjac, "", new { @class = "text-danger" })
         </div>
+
         <div class="form-group row">
             @Html.LabelFor(model => model.Cijena, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
             <div class="col-sm-10">
@@ -53,25 +52,27 @@
             </div>
         </div>
         <div class="form-group row">
+            @Html.LabelFor(model => model.VPC, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.VPC, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.VPC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row">
             @Html.LabelFor(model => model.Opis, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
             <div class="col-sm-10">
                 @Html.TextBoxFor(model => model.Opis, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Opis, "", new { @class = "text-danger" })
             </div>
         </div>
-        <div class="form-group row">
-            @Html.LabelFor(model => model.GodinaModela, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
-            <div class="col-sm-10">
-                @Html.EnumDropDownListFor(model => model.GodinaModela, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.GodinaModela, "", new { @class = "text-danger" })
-            </div>
-        </div>
+
 
         @Html.ValidationSummary(true, "Spremanje nije uspjelo!", new { @class = "text-danger" })
         <div class="form-group row">
             <div class="col-sm-10 offset-sm-2">
                 <button type="submit" class="btn btn-primary">Spremi</button>
-                @Html.ActionLink("Povratak bez spremanja", "Popis", "Mobiteli", new { @class = "btn btn-secondary ml-2" })
+                @Html.ActionLink("Povratak bez spremanja", "PopisZaAdmina", "Mobiteli", null, new { @class = "btn btn-secondary ml-2" })
             </div>
         </div>
     }

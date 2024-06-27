@@ -30,7 +30,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
                 Proizvodjac = "Samsung",
                 Cijena = 1000,
                 Opis = "Android mobitel",
-                GodinaModela = GodinaModela.G2022
+              
 
 
             }
@@ -43,7 +43,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
                 Proizvodjac = "Samsung",
                 Cijena = 500,
                 Opis = "Android mobitel",
-                GodinaModela = GodinaModela.G2023
+               
             }
             );
 
@@ -54,7 +54,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
                 Proizvodjac = "Apple",
                 Cijena = 1100,
                 Opis = "iOS mobitel",
-                GodinaModela = GodinaModela.G2023
+                
             }
             );
 
@@ -65,7 +65,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
                 Proizvodjac = "Apple",
                 Cijena = 1300,
                 Opis = "iOS mobitel",
-                GodinaModela = GodinaModela.G2023
+               
             }
             );
         }

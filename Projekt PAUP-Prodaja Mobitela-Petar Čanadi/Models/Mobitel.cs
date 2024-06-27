@@ -1,5 +1,4 @@
-﻿using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
@@ -32,14 +31,18 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
         [Display(Name = "Cijena")]
         public decimal? Cijena { get; set; }
 
+        [Display(Name = "VPC")]
+        [Required(ErrorMessage = "{0} je obavezan")]
+        [Range(0, double.MaxValue, ErrorMessage = "{0} mora biti pozitivan broj")]
+        public decimal VPC { get; set; } // Dodano svojstvo VPC
+
         [Display(Name = "Opis")]
         [Required(ErrorMessage = "{0} je obavezan")]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "{0} mora biti minimalno 2 znaka")]
         public string Opis { get; set; }
+        
+        public int Kolicina { get; set; }
 
-        [Display(Name = "Godina modela")]
-        [Column("GodinaModela")]
-        [Range(2022, 2024, ErrorMessage = "Vrijednost mora biti između 2022 do 2024")]
-        public GodinaModela GodinaModela { get; set; }
+        // Uklonjeno svojstvo GodinaModela
     }
 }

@@ -1,0 +1,36 @@
+﻿@using Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
+@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel
+
+@{
+    ViewBag.Title = "Detalji";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Detalji o Mobitelima</h2>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Naziv</dt>
+                <dd class="col-sm-9">@Model.Naziv</dd>
+
+                <dt class="col-sm-3">Proizvođač</dt>
+                <dd class="col-sm-9">@Model.Proizvodjac</dd>
+
+                <dt class="col-sm-3">Cijena</dt>
+                <dd class="col-sm-9">@Model.Cijena</dd>
+                <dt class="col-sm-3">VPC</dt>
+                <dd class="col-sm-9">@Model.VPC</dd>
+
+                <dt class="col-sm-3">Opis</dt>
+                <dd class="col-sm-9">@Model.Opis</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            @Html.ActionLink("Nazad", "PopisZaKorisnika", null, new { @class = "btn btn-secondary" })
+        
+        </div>
+    </div>
+</div>

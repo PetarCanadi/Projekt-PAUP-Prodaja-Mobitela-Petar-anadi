@@ -9,19 +9,10 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
             return View();
         }
 
-      
-            public ActionResult Onama()
-            {
-                ViewBag.Title = "O nama";
-                ViewBag.Message = "Dobrodošli u našu trgovinu mobitelima!";
-                return View("Onama");
-            }
-        
-
-        public ActionResult Contact()
+        public ActionResult Onama()
         {
-            ViewBag.Message = "Your contact page.";
             return View();
         }
+      
     }
 }

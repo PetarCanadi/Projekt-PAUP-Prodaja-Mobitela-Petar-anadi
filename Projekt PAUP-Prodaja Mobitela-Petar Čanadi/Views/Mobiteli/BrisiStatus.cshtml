@@ -1,10 +1,9 @@
-﻿
-@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel
+
 @{
     ViewBag.Title = "BrisiStatus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="alert alert-success" role="alert">Podaci uspješno izbrisani!</div>
-@Html.ActionLink("Povratak na popis Mobitela", "Popis");
-
+@Html.ActionLink("Povratak na popis Mobitela", "PopisZaAdmina", "Mobiteli", new { @class = "btn btn-primary" })

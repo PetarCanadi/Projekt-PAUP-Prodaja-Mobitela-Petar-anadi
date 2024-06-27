@@ -1,0 +1,46 @@
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Mobitel
+
+@{
+    ViewBag.Title = "Dodaj novi mobitel";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Naziv)
+        @Html.TextBoxFor(model => model.Naziv, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Naziv, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Proizvodjac)
+        @Html.DropDownListFor(model => model.Proizvodjac, (IEnumerable<SelectListItem>)ViewBag.ExistingProizvodjaci, "Odaberi proizvođača", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Proizvodjac, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Cijena)
+        @Html.TextBoxFor(model => model.Cijena, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Cijena, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.VPC)
+        @Html.TextBoxFor(model => model.VPC, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.VPC, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Opis)
+        @Html.TextAreaFor(model => model.Opis, new { @class = "form-control", rows = 4 })
+        @Html.ValidationMessageFor(model => model.Opis, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Spremi</button>
+    <a href="@Url.Action("PopisZaAdmina")" class="btn btn-default">Odustani</a>
+}
