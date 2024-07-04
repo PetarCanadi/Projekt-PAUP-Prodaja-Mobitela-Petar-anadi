@@ -4,12 +4,14 @@
 
 <div>
     <p>Jeste li sigurni da želite izbrisati reklamaciju?</p>
-    <p>ID reklamacije: @Model.Id</p>
-    <p>Proizvođač: @Model.Proizvodjac</p>
-    <p>Naziv: @Model.Naziv</p>
-    <!-- Dodajte ostale informacije o reklamaciji koje želite prikazati -->
+    <p>ID reklamacije: @Model.ReklamacijaID</p>
+    <p>Račun Stavka ID: @Model.RacunStavkaID</p>
+    <p>Naziv mobitela: @Model.NazivMobitela</p>
+    <p>Datum Reklamacije: @Model.DatumReklamacije.ToString("dd.MM.yyyy. HH:mm")</p>
+    <p>Opis: @Model.Opis</p>
+    <p>Korisničko ime: @Model.KorisnickoIme</p>
 
-    @using (Html.BeginForm("BrisiReklamaciju", "Mobiteli", new { id = Model.Id }, FormMethod.Post))
+    @using (Html.BeginForm("BrisiReklamaciju", "Mobiteli", new { id = Model.ReklamacijaID }, FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <button type="submit" class="btn btn-danger">Izbriši reklamaciju</button>

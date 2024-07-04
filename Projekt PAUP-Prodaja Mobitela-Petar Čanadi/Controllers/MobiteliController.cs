@@ -305,7 +305,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
         {
             if (!id.HasValue)
             {
-                return RedirectToAction("Popis");
+                return RedirectToAction("PopisZaAdmina");
             }
 
             Mobitel m = bazaPodataka.Mobiteli.FirstOrDefault(x => x.ID == id);
@@ -333,7 +333,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
             bazaPodataka.SaveChanges();
 
             // Preusmjeri na akciju za prikaz popisa mobitela ili neku drugu prikladnu stranicu
-            return RedirectToAction("Popis");
+            return RedirectToAction("PopisZaAdmina");
         }
         public ActionResult PopisZaKorisnika(string naziv, string proizvodjac, int? page)
         {
@@ -376,77 +376,81 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                 ViewBag.ErrorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return View(new List<Mobitel>().ToPagedList(pageNumber, pageSize));
             }
-
-
         }
-        [HttpGet]
-        public ActionResult PrijaviReklamaciju()
+        // GET: /Mobiteli/PrijavaReklamacije
+        // GET: /Mobiteli/PrijavaReklamacije
+        public ActionResult PrijavaReklamacije(int racunStavkaID)
         {
-            return View(new Reklamacija());
+            var model = new Reklamacija
+            {
+                RacunStavkaID = racunStavkaID,
+                DatumReklamacije = DateTime.Now
+            };
+
+            // Postavljanje korisničkog imena iz sesije
+            model.KorisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
+
+            return View(model);
         }
 
-        // POST: Mobiteli/PrijaviReklamaciju
+
+        // POST: /Mobiteli/PrijavaReklamacije
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PrijaviReklamaciju(Reklamacija model)
+        public ActionResult PrijavaReklamacije(Reklamacija reklamacija)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Spremanje reklamacije u bazu podataka
-                    using (var context = new BazaDbContext())
+                    string korisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
+                    ViewBag.KorisnickoIme = korisnickoIme;
+                    reklamacija.DatumReklamacije = DateTime.Now;
+                    reklamacija.KorisnickoIme = korisnickoIme; // Postavljanje korisničkog imena
+
+                    var racunStavka = bazaPodataka.RacunStavke.Find(reklamacija.RacunStavkaID);
+                    if (racunStavka == null)
                     {
-                        context.Reklamacija.Add(model);
-                        context.SaveChanges();
+                        ViewBag.ErrorMessage = "RacunStavka nije pronađen.";
+                        return View(reklamacija);
                     }
 
-                    // Nakon što je reklamacija uspješno prijavljena, preusmjerite korisnika na stranicu UspjesnaPrijavaReklamacije
-                    return RedirectToAction("UspjesnaPrijavaReklamacije");
+                    reklamacija.NazivMobitela = racunStavka.Mobitel.Naziv;
+
+                    bazaPodataka.Reklamacije.Add(reklamacija);
+                    bazaPodataka.SaveChanges();
+
+                    TempData["SuccessMessage"] = "Vaša reklamacija je uspješno prijavljena.";
+                    return RedirectToAction("PregledReklamacija");
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.ErrorMessage = "Došlo je do pogreške prilikom prijave reklamacije: " + ex.Message;
-                    return View(model);
+                    ViewBag.ErrorMessage = "Došlo je do greške prilikom spremanja reklamacije: " + ex.Message;
                 }
             }
 
-            // Ako model nije ispravan, vratite korisnika na formu za prijavu reklamacije kako bi ispravio pogreške
-            return View(model);
-        }
-
-        // GET: Mobiteli/UspjesnaPrijavaReklamacije
-        public ActionResult UspjesnaPrijavaReklamacije()
-        {
-            return View();
+            return View(reklamacija);
         }
 
 
 
-        [HttpGet]
+        // GET: /Mobiteli/PregledReklamacija
+        // GET: /Mobiteli/PregledReklamacija
         public ActionResult PregledReklamacija()
         {
-            try
-            {
-                using (var context = new BazaDbContext()) // Inicijalizirajte novu instancu BazaDbContext
-                {
-                    var reklamacije = context.Reklamacija.ToList();
+            var reklamacije = bazaPodataka.Reklamacije.Include(r => r.RacunStavka.Mobitel).ToList();
 
-                    if (reklamacije == null || !reklamacije.Any())
-                    {
-                        ViewBag.Message = "Nema prijavljenih reklamacija!";
-                        return View(new List<Reklamacija>());
-                    }
-
-                    return View(reklamacije);
-                }
-            }
-            catch (Exception ex)
+            foreach (var reklamacija in reklamacije)
             {
-                ViewBag.ErrorMessage = "Došlo je do pogreške prilikom dohvaćanja reklamacija: " + ex.Message;
-                return View(new List<Reklamacija>());
+                reklamacija.NazivMobitela = reklamacija.RacunStavka.Mobitel.Naziv;
             }
+
+            return View(reklamacije);
         }
+
+
+
+        // GET: /Mobiteli/PregledReklamacija
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -454,32 +458,37 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
         {
             try
             {
-                using (var context = new BazaDbContext()) // Inicijalizirajte novu instancu BazaDbContext
+                using (var context = new BazaDbContext())
                 {
-                    var reklamacija = context.Reklamacija.FirstOrDefault(r => r.Id == id);
+                    var reklamacija = context.Reklamacije.FirstOrDefault(r => r.ReklamacijaID == id);
                     if (reklamacija == null)
                     {
-                        return HttpNotFound();
+                        TempData["ErrorMessage"] = "Reklamacija nije pronađena.";
+                        return RedirectToAction("PregledReklamacija");
                     }
 
-                    context.Reklamacija.Remove(reklamacija);
+                    context.Reklamacije.Remove(reklamacija);
                     context.SaveChanges();
 
+                    TempData["SuccessMessage"] = "Reklamacija je uspješno obrisana.";
                     return RedirectToAction("PregledReklamacija");
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Došlo je do pogreške prilikom brisanja reklamacije: " + ex.Message;
+                TempData["ErrorMessage"] = "Došlo je do pogreške prilikom brisanja reklamacije: " + ex.Message;
                 return RedirectToAction("PregledReklamacija");
             }
         }
 
+
+
+
         public ActionResult PotvrdaBrisanja(int id)
         {
-            using (var context = new BazaDbContext()) // Inicijalizirajte novu instancu BazaDbContext
+            using (var context = new BazaDbContext())
             {
-                var reklamacija = context.Reklamacija.Find(id);
+                var reklamacija = context.Reklamacije.Find(id);
                 if (reklamacija == null)
                 {
                     return HttpNotFound();
@@ -487,6 +496,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                 return View(reklamacija);
             }
         }
+
         // Dodavanje u košaricu
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -544,6 +554,9 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
 
         public ActionResult Kosarica()
         {
+            string KorisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
+            ViewBag.KorisnickoIme = KorisnickoIme;
+           
             var kosaricaMobiteli = Session["Kosarica"] as List<Mobitel>;
             if (kosaricaMobiteli == null)
             {
@@ -553,10 +566,6 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
 
             return View(kosaricaMobiteli);
         }
-
-
-
-        // Brisanje iz košarice
 
 
         [HttpPost]
@@ -584,20 +593,19 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
             return RedirectToAction("Kosarica"); // Preusmjeri na akciju Kosarica za prikaz ažurirane košarice
         }
 
-
         public ActionResult PrikaziRacun(int? id)
         {
+
             try
             {
                 using (var bazaPodataka = new BazaDbContext())
                 {
                     Racun racun = null;
+                    string KorisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
+                    ViewBag.KorisnickoIme = KorisnickoIme;
 
                     if (!id.HasValue)
                     {
-                        string korisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
-                        ViewBag.KorisnickoIme = korisnickoIme;
-
                         var mobiteliUKosarici = Session["Kosarica"] as List<Mobitel>;
                         if (mobiteliUKosarici == null || mobiteliUKosarici.Count == 0)
                         {
@@ -609,7 +617,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                         racun = new Racun
                         {
                             DatumKupnje = DateTime.Now,
-                            KorisnickoIme = korisnickoIme,
+                            KorisnickoIme = KorisnickoIme,
                             UkupanIznos = ukupanIznos,
                             RacunStavke = mobiteliUKosarici.Select(m => new RacunStavka
                             {
@@ -658,15 +666,19 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                 var innerException = ex.InnerException != null ? ex.InnerException.ToString() : "No inner exception";
 
                 // Detaljno logiranje
-                System.Diagnostics.Debug.WriteLine($"Exception: {ex.ToString()}");
+                System.Diagnostics.Debug.WriteLine($"Exception: {ex}");
                 System.Diagnostics.Debug.WriteLine($"Inner Exception: {innerException}");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
 
                 return Json(new { success = false, message = "Došlo je do greške prilikom generiranja računa: " + ex.Message, innerError = innerException }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+
         public ActionResult PopisSvihRacuna()
         {
+           
             try
             {
                 using (var bazaPodataka = new BazaDbContext())
@@ -715,19 +727,27 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                 return View(new Racun());
             }
         }
+
         public ActionResult IzbrisiRacun(int id)
         {
             try
             {
                 using (var bazaPodataka = new BazaDbContext())
                 {
-                    var racun = bazaPodataka.Racuni.Find(id);
+                    var racun = bazaPodataka.Racuni
+                                            .Include(r => r.RacunStavke)
+                                            .FirstOrDefault(r => r.RacunID == id);
 
                     if (racun == null)
                     {
-                        return HttpNotFound();
+                        TempData["ErrorMessage"] = $"Račun ID {id} nije pronađen.";
+                        return RedirectToAction("PopisSvihRacuna");
                     }
 
+                    // Brisanje povezanih stavki računa
+                    bazaPodataka.RacunStavke.RemoveRange(racun.RacunStavke);
+
+                    // Brisanje računa
                     bazaPodataka.Racuni.Remove(racun);
                     bazaPodataka.SaveChanges();
 
@@ -739,27 +759,38 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
             {
                 TempData["ErrorMessage"] = $"Došlo je do greške prilikom brisanja računa ID {id}.";
                 System.Diagnostics.Debug.WriteLine($"Exception: {ex.ToString()}");
-                return RedirectToAction("DetaljiRacuna", new { id = id });
+                return RedirectToAction("PopisSvihRacuna");
             }
         }
-        public ActionResult MojeKupnje()
+    
+
+
+
+    public ActionResult MojeKupnje()
         {
             try
             {
-                string korisnickoIme = User.Identity.Name;
+                string KorisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
+                ViewBag.KorisnickoIme = KorisnickoIme;
+
+                List<Racun> racuni = new List<Racun>();
 
                 using (var bazaPodataka = new BazaDbContext())
                 {
-                    var racuni = bazaPodataka.Racuni
-                                             .Where(r => r.KorisnickoIme == korisnickoIme)
-                                             .ToList();
-
-                    return View(racuni);
+                    // Učitaj račune s povezanim stavkama
+                    racuni = bazaPodataka.Racuni
+                                         .Include(r => r.RacunStavke) // Učitaj povezane stavke računa
+                                         .Where(r => r.KorisnickoIme == KorisnickoIme)
+                                         .ToList();
                 }
+
+                System.Diagnostics.Debug.WriteLine($"Found {racuni.Count} invoices for user {KorisnickoIme}");
+
+                return View(racuni);
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = $"Došlo je do greške prilikom dohvaćanja vaših kupnji.";
+                ViewBag.ErrorMessage = "Došlo je do greške prilikom dohvaćanja vaših kupnji.";
                 System.Diagnostics.Debug.WriteLine($"Exception: {ex.ToString()}");
                 return View(new List<Racun>());
             }
@@ -768,9 +799,9 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
 
 
 
-
         public ActionResult DetaljiRacunaZaKupca(int? id)
         {
+          
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -778,14 +809,14 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
 
             try
             {
-                // Dohvati korisničko ime prijavljenog korisnika
-                string korisnickoIme = User.Identity.Name;
+                string KorisnickoIme = HttpContext.Session["KorisnickoIme"]?.ToString();
+                ViewBag.KorisnickoIme = KorisnickoIme;
 
                 using (var bazaPodataka = new BazaDbContext())
                 {
                     var racun = bazaPodataka.Racuni
                                             .Include(r => r.RacunStavke.Select(rs => rs.Mobitel))
-                                            .FirstOrDefault(r => r.RacunID == id && r.KorisnickoIme == korisnickoIme);
+                                            .FirstOrDefault(r => r.RacunID == id && r.KorisnickoIme == KorisnickoIme);
 
                     if (racun == null)
                     {

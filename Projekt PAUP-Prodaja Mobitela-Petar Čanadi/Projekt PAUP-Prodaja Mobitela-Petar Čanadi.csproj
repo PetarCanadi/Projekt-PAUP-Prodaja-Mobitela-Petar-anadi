@@ -274,8 +274,6 @@
     <Content Include="Views\Mobiteli\PotvrdaBrisanja.cshtml" />
     <Content Include="Views\Korisnici\PopisKupaca.cshtml" />
     <Content Include="Views\Korisnici\PotvrdaBrisanja.cshtml" />
-    <Content Include="Views\Mobiteli\UspjesnaPrijavaReklamacije.cshtml" />
-    <Content Include="Views\Mobiteli\PrijaviReklamaciju.cshtml" />
     <Content Include="Views\Korisnici\PromjenaLozinke.cshtml" />
     <Content Include="Views\Mobiteli\Kosarica.cshtml" />
     <Content Include="Views\Mobiteli\PopisRacuna.cshtml" />
@@ -284,6 +282,7 @@
     <Content Include="Views\Mobiteli\DetaljiRacuna.cshtml" />
     <Content Include="Views\Mobiteli\MojeKupnje.cshtml" />
     <Content Include="Views\Mobiteli\DetaljiRacunaZaKupca.cshtml" />
+    <Content Include="Views\Mobiteli\PrijavaReklamacije.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

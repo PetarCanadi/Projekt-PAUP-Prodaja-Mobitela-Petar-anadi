@@ -1,9 +1,9 @@
-﻿
-@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Racun
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Racun
 
 @{
     ViewBag.Title = "Detalji računa";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var euroCulture = new System.Globalization.CultureInfo("eu"); // Postavljamo CultureInfo za eure
 }
 
 <div class="container">
@@ -17,32 +17,40 @@
         <dd class="col-sm-9">@Model.KorisnickoIme</dd>
 
         <dt class="col-sm-3">Ukupan iznos:</dt>
-        <dd class="col-sm-9">@Model.UkupanIznos.ToString("C")</dd>
+        <dd class="col-sm-9">@Model.UkupanIznos.ToString("C", euroCulture)</dd>
     </dl>
-
+    
     <h3>Stavke računa</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Naziv mobitela</th>
-                <th>Količina</th>
-                <th>Cijena po komadu</th>
-                <th>Ukupna cijena</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var stavka in Model.RacunStavke)
-            {
+    @if (Model.RacunStavke == null || Model.RacunStavke.Count == 0)
+    {
+        <p>Nema stavki za prikaz.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@stavka.Mobitel.Naziv</td>
-                    <td>@stavka.Kolicina</td>
-                    <td>@stavka.Cijena.ToString("C")</td>
-                    <td>@stavka.UkupnaCijena.ToString("C")</td>
+                    <th>Naziv mobitela</th>
+                    <th>Količina</th>
+                    <th>Cijena po komadu</th>
+                    <th>Ukupna cijena</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var stavka in Model.RacunStavke)
+                {
+                    <tr>
+                        <td>@stavka.Mobitel.Naziv</td>
+                        <td>@stavka.Kolicina</td>
+                        <td>@stavka.Cijena.ToString("C",euroCulture)</td>
+                        <td>@stavka.UkupnaCijena.ToString("C", euroCulture)</td>
+                    </tr>
 
-    @Html.ActionLink("Izbriši račun", "IzbrisiRacun", new { id = Model.RacunID }, new { @class = "btn btn-danger", onclick = "return confirm('Jeste li sigurni da želite izbrisati ovaj račun?');" })
+                }
+            </tbody>
+        </table>
+    }
+
+
     @Html.ActionLink("Natrag na popis", "PopisSvihRacuna", null, new { @class = "btn btn-secondary" })
 </div>

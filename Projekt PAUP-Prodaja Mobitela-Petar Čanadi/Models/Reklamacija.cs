@@ -2,33 +2,24 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
 {
-    [Table("reklamacija")]
     public class Reklamacija
     {
-        public int Id { get; set; }
+        public int ReklamacijaID { get; set; }
 
-        [Required(ErrorMessage = "ID mobitela je obavezan")]
-        public int MobitelId { get; set; }
+        public string Opis { get; set; }
 
-        [Required(ErrorMessage = "Proizvođač je obavezan")]
-        public string Proizvodjac { get; set; }
+        public DateTime DatumReklamacije { get; set; }
 
-        [Required(ErrorMessage = "Naziv je obavezan")]
-        public string Naziv { get; set; }
+        public int RacunStavkaID { get; set; }
 
-        [Required(ErrorMessage = "Cijena je obavezna")]
-        public decimal Cijena { get; set; }
+        [NotMapped]
+        public string NazivMobitela { get; set; }
 
-        [Required(ErrorMessage = "Datum kupnje je obavezan")]
-        [Display(Name = "Datum Kupnje")]
-        [DataType(DataType.Date)]
-        public DateTime DatumKupnje { get; set; }
+        public virtual RacunStavka RacunStavka { get; set; }
 
-        [Required(ErrorMessage = "Opis kvara je obavezan")]
-        [Display(Name = "Opis Kvara")]
-        public string OpisKvara { get; set; }
+        // Svojstvo za korisničko ime korisnika koji je prijavio reklamaciju
+        public string KorisnickoIme { get; set; }
     }
 }

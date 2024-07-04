@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Moje Kupnje";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var euroCulture = new System.Globalization.CultureInfo("eu"); // Postavljamo CultureInfo za eure
 }
 
 <div class="container">
@@ -29,7 +30,7 @@
                     <tr>
                         <td>@racun.RacunID</td>
                         <td>@racun.DatumKupnje.ToString("dd.MM.yyyy. HH:mm")</td>
-                        <td>@racun.UkupanIznos.ToString("C")</td>
+                        <td>@racun.UkupanIznos.ToString("C", euroCulture)</td>
                         <td>
                             @Html.ActionLink("Detalji", "DetaljiRacunaZaKupca", new { id = racun.RacunID }, new { @class = "btn btn-info" })
                         </td>
@@ -37,5 +38,7 @@
                 }
             </tbody>
         </table>
+        @Html.ActionLink("Povratak na popis mobitela", "PopisZaKorisnika", "Mobiteli", null, new { @class = "btn btn-primary" })
     }
+
 </div>

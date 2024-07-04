@@ -34,8 +34,11 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
                 if (korisnik != null)
                 {
                     FormsAuthentication.SetAuthCookie(korisnik.KorisnickoIme, false);
-                    // Spremi korisničko ime u sesiju
-                    Session["KorisnickoIme"] = korisnik.KorisnickoIme;
+                    Session["KorisnickoIme"] = korisnik.KorisnickoIme; // Postavljanje KorisnickoIme u sesiju
+
+                    // Postavljanje KorisnickogIme u ViewBag
+                    ViewBag.KorisnickoIme = korisnik.KorisnickoIme;
+
                     return RedirectToAction("PopisZaKorisnika", "Mobiteli");
                 }
                 else
@@ -45,6 +48,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Controllers
             }
             return View(prijava);
         }
+
 
 
         [HttpGet]

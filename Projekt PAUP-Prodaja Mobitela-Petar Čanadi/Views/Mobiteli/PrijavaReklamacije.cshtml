@@ -1,0 +1,68 @@
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Reklamacija
+
+@{
+    ViewBag.Title = "Prijava reklamacije";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Opis, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Opis, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Opis, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Prijavi reklamaciju" class="btn btn-primary" />
+        </div>
+    </div>
+    <div>
+        @Html.ActionLink("Povratak na popis mobitela", "PopisZaKorisnika", "Mobiteli", null, new { @class = "btn btn-secondary" })
+
+    </div>}
+
+<!-- Modal for successful submission -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="successModalLabel">Uspješna prijava reklamacije</h4>
+            </div>
+            <div class="modal-body">
+                <p>@TempData["SuccessMessage"]</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('form').submit(function (event) {
+                event.preventDefault(); // spriječava default submit ponašanje forme
+
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function (data) {
+                        $('#successModal').modal('show'); // prikaži modal
+                        setTimeout(function () {
+                            $('#successModal').modal('hide'); // sakrij modal nakon 2 sekunde (2000 ms)
+                        }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Došlo je do greške prilikom slanja forme:', error);
+                    }
+                });
+            });
+        });
+    </script>
+}

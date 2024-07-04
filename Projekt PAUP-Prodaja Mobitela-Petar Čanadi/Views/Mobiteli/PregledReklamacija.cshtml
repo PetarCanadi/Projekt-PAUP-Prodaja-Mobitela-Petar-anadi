@@ -1,46 +1,51 @@
 ﻿@model List<Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Reklamacija>
 
 @{
-    ViewBag.Title = "Pregled Reklamacija";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Pregled prijavljenih reklamacija";
 }
 
-<h2>@ViewBag.Title</h2>
-<a href="@Url.Action("PopisZaAdmina", "Mobiteli")" class="btn btn-secondary">Povratak</a>
+<h2>Pregled prijavljenih reklamacija</h2>
 
 @if (ViewBag.Message != null)
 {
-    <div class="alert alert-info">@ViewBag.Message</div>
+    <p>@ViewBag.Message</p>
 }
 else
 {
     <table class="table">
-        <tr>
-            <th>ID</th>
-            <th>Proizvođač</th>
-            <th>Naziv</th>
-            <th>Cijena</th>
-            <th>Datum Kupnje</th>
-            <th>Opis Kvara</th>
-            <th></th> 
-        </tr>
-        @foreach (var reklamacija in Model)
-        {
+        <thead>
             <tr>
-                <td>@reklamacija.Id</td>
-                <td>@reklamacija.Proizvodjac</td>
-                <td>@reklamacija.Naziv</td>
-                <td>@reklamacija.Cijena</td>
-                <td>@reklamacija.DatumKupnje.ToShortDateString()</td>
-                <td>@reklamacija.OpisKvara</td>
-                <td>
-                    @using (Html.BeginForm("PotvrdaBrisanja", "Mobiteli", new { id = reklamacija.Id }, FormMethod.Get))
-                    {
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger btn-sm">Izbriši</button>
-                    }
-                </td>
+                <th>Reklamacija ID</th>
+                <th>Račun Stavka ID</th>
+                <th>Naziv mobitela</th>
+                <th>Datum Reklamacije</th>
+                <th>Opis</th>
+                <th>Korisničko ime</th>
+                <th></th> <!-- Dodajte prazan stupac za gumb -->
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var reklamacija in Model)
+            {
+                <tr>
+                    <td>@reklamacija.ReklamacijaID</td>
+                    <td>@reklamacija.RacunStavkaID</td>
+                    <td>@reklamacija.NazivMobitela</td>
+                    <td>@reklamacija.DatumReklamacije.ToString("dd.MM.yyyy. HH:mm")</td>
+                    <td>@reklamacija.Opis</td>
+                    <td>@reklamacija.KorisnickoIme</td>
+                    <td>
+                        @using (Html.BeginForm("PotvrdaBrisanja", "Mobiteli", new { id = reklamacija.ReklamacijaID }, FormMethod.Get))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger" onclick=('Jeste li sigurni da želite obrisati ovu reklamaciju?');>Obriši</button>
+                        }
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
     </table>
+    @Html.ActionLink("Povratak", "PopisZaAdmina", null, new { @class = "btn btn-secondary ml-2" })
 }

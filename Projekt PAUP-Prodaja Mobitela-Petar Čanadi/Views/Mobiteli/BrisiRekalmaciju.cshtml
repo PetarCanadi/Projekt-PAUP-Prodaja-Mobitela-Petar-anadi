@@ -1,5 +1,4 @@
-﻿
-@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Reklamacija
+﻿@model Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models.Reklamacija
 
 <h2>Potvrda brisanja reklamacije</h2>
 
@@ -8,7 +7,6 @@
     <p>ID reklamacije: @Model.Id</p>
     <p>Proizvođač: @Model.Proizvodjac</p>
     <p>Naziv: @Model.Naziv</p>
-    
 
     @using (Html.BeginForm("BrisiReklamaciju", "Mobiteli", new { id = Model.Id }, FormMethod.Post))
     {

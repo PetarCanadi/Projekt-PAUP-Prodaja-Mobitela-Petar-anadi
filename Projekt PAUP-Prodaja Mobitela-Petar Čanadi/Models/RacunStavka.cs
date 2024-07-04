@@ -11,7 +11,7 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
         public int RacunID { get; set; }
 
         [ForeignKey("Mobitel")]
-        public int MobitelID { get; set; } // Koristimo ID kao strani ključ
+        public int MobitelID { get; set; } // Foreign key to Mobitel table
 
         public int Kolicina { get; set; }
         public decimal Cijena { get; set; }
@@ -19,8 +19,8 @@ namespace Projekt_PAUP_Prodaja_Mobitela_Petar_Čanadi.Models
 
         // Navigation properties
         [ForeignKey("RacunID")]
-        public virtual Racun Racun { get; set; }
+        public virtual Racun Racun { get; set; } // Navigation property to Racun table
         [ForeignKey("MobitelID")]
-        public virtual Mobitel Mobitel { get; set; }
+        public virtual Mobitel Mobitel { get; set; } // Navigation property to Mobitel table
     }
 }

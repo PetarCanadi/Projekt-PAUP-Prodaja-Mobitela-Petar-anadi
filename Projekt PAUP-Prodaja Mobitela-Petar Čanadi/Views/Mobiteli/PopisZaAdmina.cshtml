@@ -18,7 +18,10 @@
                 <a href="@Url.Action("PregledReklamacija", "Mobiteli")" class="btn btn-warning">Pregled reklamacija</a>
                 <!-- Gumb za dodavanje novog mobitela -->
                 <a href="@Url.Action("DodajNoviMobitel", "Mobiteli")" class="btn btn-success">Dodaj novi mobitel</a>
-
+                <!-- Gumb za pregled računa -->
+                <div class="mb-3">
+                    <a href="@Url.Action("PopisSvihRacuna", "Mobiteli")" class="btn btn-info">Pregled računa</a>
+                </div>
                 <!-- Forma za odjavu -->
                 @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-inline" }))
                 {
@@ -48,10 +51,7 @@
     }
     else
     {
-        <!-- Gumb za pregled računa -->
-        <div class="mb-3">
-            <a href="@Url.Action("PopisSvihRacuna", "Mobiteli")" class="btn btn-info">Pregled računa</a>
-        </div>
+     
 
 
 
